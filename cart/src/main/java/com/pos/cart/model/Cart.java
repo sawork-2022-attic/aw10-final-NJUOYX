@@ -1,8 +1,13 @@
 package com.pos.cart.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@Data
 public class Cart{
     private final List<Item> items = new ArrayList<>();
 

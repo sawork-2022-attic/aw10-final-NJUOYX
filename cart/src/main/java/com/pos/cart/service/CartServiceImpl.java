@@ -25,9 +25,17 @@ public class CartServiceImpl implements CartService{
     @Override
     public boolean addItem(Item item) {
         Cart cart = cartRepository.getCart();
-        boolean res = cart.addItem(item);
-        cartRepository.setCart(cart);
-        return res;
+        Item it = cart.getItems().stream()
+                .filter(i -> i.equals(item))
+                .findFirst().orElse(null);
+        if(it == null){
+            boolean res = cart.addItem(item);
+            cartRepository.setCart(cart);
+            return res;
+        }else{
+            it.addQuantity(1);
+            return true;
+        }
     }
 
     @Override
