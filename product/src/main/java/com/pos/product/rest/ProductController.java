@@ -1,4 +1,4 @@
-package com.pos.product.controller;
+package com.pos.product.rest;
 
 import com.pos.product.model.Product;
 import com.pos.product.service.ProductService;
