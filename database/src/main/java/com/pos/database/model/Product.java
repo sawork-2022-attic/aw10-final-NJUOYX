@@ -1,15 +1,16 @@
-package com.pos.product.model;
+package com.pos.database.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class Product implements Serializable {
     private String asin;
     private String image_url;
     private String image_url_high_res;

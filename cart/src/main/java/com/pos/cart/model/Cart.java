@@ -1,21 +1,24 @@
 package com.pos.cart.model;
 
+import com.pos.database.model.Item;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
+@AllArgsConstructor
 @Data
-public class Cart{
+public class Cart implements Serializable {
     private final List<Item> items = new ArrayList<>();
+
 
     public boolean addItem(Item item) {
         return items.add(item);
     }
 
-    public double getTotal() {
+    public double total() {
         double total = 0;
         for (int i = 0; i < items.size(); i++) {
             total += items.get(i).getQuantity() * items.get(i).getProduct().getPrice();

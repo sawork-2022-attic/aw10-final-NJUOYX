@@ -1,10 +1,10 @@
 package com.pos.product.service;
 
-import com.pos.product.model.Product;
-
-import java.util.List;
+import com.pos.database.model.Product;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface ProductService {
-    List<Product> products();
-    Product getProduct(String asin);
+    Flux<Product> products();
+    Mono<Product> getProduct(String asin);
 }

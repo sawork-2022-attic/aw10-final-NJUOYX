@@ -1,8 +1,8 @@
 package com.pos.cart.rest;
 
-import com.pos.cart.model.Cart;
-import com.pos.cart.model.Item;
 import com.pos.cart.service.CartService;
+import com.pos.cart.model.Cart;
+import com.pos.database.model.Item;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

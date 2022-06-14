@@ -1,6 +1,6 @@
 package com.pos.product.rest;
 
-import com.pos.product.model.Product;
+import com.pos.database.model.Product;
 import com.pos.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,11 +17,11 @@ public class ProductController {
 
     @GetMapping("/{asin}")
     public Mono<Product> getProduct(@PathVariable String asin){
-        return Mono.justOrEmpty(productService.getProduct(asin));
+        return productService.getProduct(asin);
     }
 
     @GetMapping("/")
     public Flux<Product> getAllProducts(){
-        return Flux.fromIterable(productService.products());
+        return productService.products();
     }
 }

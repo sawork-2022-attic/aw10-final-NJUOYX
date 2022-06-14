@@ -1,7 +1,7 @@
 package com.pos.cart.service;
 
 import com.pos.cart.model.Cart;
-import com.pos.cart.model.Item;
+import com.pos.database.model.Item;
 import reactor.core.publisher.Mono;
 
 public interface CartService {

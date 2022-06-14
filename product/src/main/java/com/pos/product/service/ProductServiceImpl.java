@@ -1,45 +1,36 @@
 package com.pos.product.service;
 
-import com.pos.product.model.Product;
-import com.pos.product.model.ProductEntity;
-import com.pos.product.repository.ProductEntityRepository;
+import com.pos.database.model.Product;
+import com.pos.database.model.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import reactor.util.annotation.Nullable;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService{
 
-    @Autowired
-    private ProductEntityRepository productEntityRepository;
+    private final WebClient webClient = WebClient.builder().baseUrl("http://localhost:8010").build();
 
-    @Nullable
-    private Product productEntityToProduct(@Nullable ProductEntity productEntity){
-        if(productEntity == null){
-            return null;
-        }
-        return new Product(productEntity.getAsin(),
-                productEntity.getImageUrl(),
-                productEntity.getImageUrlHighRes(),
-                productEntity.getMainCat(),
-                productEntity.getPrice(),
-                productEntity.getTitle());
+    @Override
+    public Flux<Product> products() {
+        return webClient.get()
+                .uri("/product/all")
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToFlux(Product.class);
     }
 
     @Override
-    public List<Product> products() {
-        return productEntityRepository.findAll().stream()
-                .map(this::productEntityToProduct)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public Product getProduct(String asin) {
-        Example<ProductEntity> example = Example.of(ProductEntity.fromAsin(asin));
-        return productEntityToProduct(productEntityRepository.findOne(example).orElse(null));
+    public Mono<Product> getProduct(String asin) {
+        return webClient.get()
+                .uri("/product/{asin}", asin)
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(Product.class);
     }
 }

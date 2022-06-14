@@ -1,4 +1,4 @@
-package com.pos.product.model;
+package com.pos.database.model;
 
 import javax.persistence.*;
 
@@ -88,5 +88,20 @@ public class ProductEntity {
         ProductEntity product = new ProductEntity();
         product.setAsin(asin);
         return product;
+    }
+
+    public Product toProduct(){
+        return new Product(asin, imageUrl, imageUrlHighRes, mainCat, price, title);
+    }
+
+    public static ProductEntity fromProduct(Product product){
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setAsin(product.getAsin());
+        productEntity.setImageUrl(product.getImage_url());
+        productEntity.setImageUrlHighRes(product.getImage_url_high_res());
+        productEntity.setMainCat(product.getMain_cart());
+        productEntity.setPrice(product.getPrice());
+        productEntity.setTitle(product.getTitle());
+        return productEntity;
     }
 }
