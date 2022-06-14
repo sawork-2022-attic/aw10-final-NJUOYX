@@ -1,0 +1,13 @@
+server:
+  port: 8083
+eureka:
+  instance:
+    instance-id: cart
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8000/eureka
+spring:
+  application:
+    name: cart

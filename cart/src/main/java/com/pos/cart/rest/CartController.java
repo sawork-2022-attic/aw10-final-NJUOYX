@@ -16,22 +16,22 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    @GetMapping("/")
+    @GetMapping("/cart")
     public Mono<Cart> getCart(){
         return Mono.just(cartService.getCart());
     }
 
-    @PostMapping("/add")
+    @PostMapping("/cart/add")
     public Mono<Boolean> addItem(@RequestBody Item item){
         return Mono.just(cartService.addItem(item));
     }
 
-    @GetMapping("/total")
+    @GetMapping("/cart/total")
     public Mono<Double> getTotal(){
         return Mono.just(cartService.getTotal());
     }
 
-    @PostMapping("/checkout")
+    @PostMapping("/cart/checkout")
     public Mono<Boolean> checkout(){
         return cartService.checkout();
     }

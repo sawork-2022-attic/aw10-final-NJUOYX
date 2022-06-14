@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono;
 @Service
 public class CartServiceImpl implements CartService{
 
-    private final WebClient webClient = WebClient.builder().baseUrl("http://localhost:8004").build();
+    private final WebClient webClient = WebClient.builder().baseUrl("http://localhost:8001").build();
 
     @Autowired
     private CartRepository cartRepository;
@@ -46,7 +46,7 @@ public class CartServiceImpl implements CartService{
     @Override
     public Mono<Boolean> checkout() {
         Mono<Boolean> res = webClient.post()
-                .uri("/new")
+                .uri("order/new")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(cartRepository.getCart()), Cart.class)
                 .accept(MediaType.APPLICATION_JSON)

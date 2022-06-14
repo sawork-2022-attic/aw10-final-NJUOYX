@@ -3,6 +3,7 @@ server:
 spring:
   application:
     name: gateway
+
   cloud:
     gateway:
       routes:
@@ -10,15 +11,19 @@ spring:
           uri: lb://product
           predicates:
             - Path=/product/**
-            - Method=GET
         - id: cart
           uri: lb://cart
           predicates:
             - Path=/cart/**
+        - id: database
+          uri: lb://database
+          predicates:
+            - Path=/database/**
         - id: order
           uri: lb://order
           predicates:
             - Path=/order/**
+
   main:
     web-application-type: reactive
 eureka:

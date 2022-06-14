@@ -16,12 +16,12 @@ import java.util.HashSet;
 @Service
 public class OrderServiceImpl implements OrderService{
 
-    private final WebClient webClient = WebClient.builder().baseUrl("http://localhost:8010").build();
+    private final WebClient webClient = WebClient.builder().baseUrl("http://localhost:8001").build();
 
     @Override
     public Flux<Status> getAllStatus() {
         return webClient.get()
-                .uri("/status/all")
+                .uri("/database/status/all")
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(Status.class);
@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public Mono<Boolean> newStatus(Status status) {
         return webClient.post()
-                .uri("/status/add")
+                .uri("/database/status/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(status), Status.class)
                 .accept(MediaType.APPLICATION_JSON)

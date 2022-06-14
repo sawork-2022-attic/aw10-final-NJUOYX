@@ -17,12 +17,12 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/")
+    @GetMapping("/order")
     public Flux<Status> getAllStatus(){
         return orderService.getAllStatus();
     }
 
-    @PostMapping("/new")
+    @PostMapping("/order/new")
     public Mono<Boolean> newStatus(@RequestBody Cart cart){
         return orderService.newStatus(cart);
     }

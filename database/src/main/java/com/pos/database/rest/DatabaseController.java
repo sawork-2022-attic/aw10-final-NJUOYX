@@ -15,22 +15,22 @@ public class DatabaseController {
     @Autowired
     private DatabaseService databaseService;
 
-    @GetMapping("/product/all")
+    @GetMapping("/database/product/all")
     public Flux<Product> getAllProducts(){
         return Flux.fromIterable(databaseService.getAllProduct());
     }
 
-    @GetMapping("/product/{asin}")
+    @GetMapping("/database/product/{asin}")
     public Mono<Product> getProduct(@PathVariable String asin){
         return Mono.just(databaseService.getProduct(asin));
     }
 
-    @GetMapping("/status/all")
+    @GetMapping("/database/status/all")
     public Flux<Status> getAllStatus(){
         return Flux.fromIterable(databaseService.getAllStatus());
     }
 
-    @PostMapping("/status/add")
+    @PostMapping("/database/status/add")
     public Mono<Boolean> addStatus(@RequestBody Status status){
         return Mono.just(databaseService.addStatus(status));
     }
