@@ -1,11 +1,19 @@
 package com.pos.cart.service;
 
+import com.netflix.discovery.converters.Auto;
 import com.pos.cart.repository.CartRepository;
 import com.pos.cart.model.Cart;
 import com.pos.database.model.Item;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
+import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -18,6 +26,9 @@ public class CartServiceImpl implements CartService{
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     private Cart _getCart(String uid){
         return cartRepository.findById(uid).orElse(new Cart(uid));
@@ -48,6 +59,8 @@ public class CartServiceImpl implements CartService{
 
     private Runnable checkoutWay(String uid){
         return () -> {
+            rabbitTemplate.convertAndSend("order", _getCart(uid));
+            System.out.println("sent cart");
             _deleteCart(uid);
         };
     }

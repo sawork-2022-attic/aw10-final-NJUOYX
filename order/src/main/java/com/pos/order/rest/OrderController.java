@@ -22,6 +22,7 @@ public class OrderController {
         return orderService.getAllStatus();
     }
 
+    @Deprecated
     @PostMapping("/order/new")
     public Mono<Boolean> newStatus(@RequestBody Cart cart){
         return orderService.newStatus(cart);
