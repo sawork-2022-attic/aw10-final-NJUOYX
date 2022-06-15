@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 
 
 public interface OrderService {
-    Flux<Status> getAllStatus();
+    Flux<Status> getAllStatus(String uid);
 
     Mono<Boolean> newStatus(Status status);
 

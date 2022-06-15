@@ -2,15 +2,17 @@ package com.pos.database.service;
 
 import com.pos.database.model.Product;
 import com.pos.database.model.Status;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface DatabaseService {
-    List<Product> getAllProduct();
+    Flux<Product> getAllProduct();
 
-    Product getProduct(String asin);
+    Mono<Product> getProduct(String asin);
 
-    List<Status> getAllStatus();
+    Flux<Status> getAllStatus(String uid);
 
-    Boolean addStatus(Status status);
+    Mono<Boolean> addStatus(Status status);
 }

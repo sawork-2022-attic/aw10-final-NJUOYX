@@ -14,6 +14,9 @@ public class StatusEntity {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "uid", nullable = false)
+    private String uid;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
@@ -23,13 +26,20 @@ public class StatusEntity {
             inverseJoinColumns = @JoinColumn(name = "item_id"))
     private Set<ItemEntity> items = new LinkedHashSet<>();
 
-    public StatusEntity(Set<ItemEntity> items, Instant createdAt){
+    public StatusEntity(String uid, Set<ItemEntity> items, Instant createdAt){
+        this.uid = uid;
         this.items = items;
         this.createdAt = createdAt;
     }
 
     public StatusEntity() {
 
+    }
+
+    public static StatusEntity fromUid(String uid){
+        StatusEntity entity = new StatusEntity();
+        entity.setUid(uid);
+        return entity;
     }
 
     public Integer getId() {
@@ -57,7 +67,7 @@ public class StatusEntity {
     }
 
     public Status toStatus(){
-        return new Status(
+        return new Status(uid,
                 items.stream()
                         .map(ItemEntity::toItem)
                         .collect(Collectors.toSet()),
@@ -66,10 +76,18 @@ public class StatusEntity {
 
     public static StatusEntity fromStatus(Status status){
         return new StatusEntity(
+                status.getUid(),
                 status.getItems().stream()
                         .map(ItemEntity::fromItem)
                         .collect(Collectors.toSet()),
                 status.getCreatedAt());
     }
 
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 }

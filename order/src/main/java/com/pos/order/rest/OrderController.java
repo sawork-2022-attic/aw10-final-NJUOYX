@@ -17,9 +17,9 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @GetMapping("/order")
-    public Flux<Status> getAllStatus(){
-        return orderService.getAllStatus();
+    @PostMapping("/order")
+    public Flux<Status> getAllStatus(@RequestBody String uid){
+        return orderService.getAllStatus(uid);
     }
 
     @Deprecated

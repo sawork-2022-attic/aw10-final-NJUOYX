@@ -26,9 +26,11 @@ public class OrderServiceImpl implements OrderService{
     private final WebClient webClient = WebClient.builder().baseUrl("http://localhost:8001").build();
 
     @Override
-    public Flux<Status> getAllStatus() {
-        return webClient.get()
+    public Flux<Status> getAllStatus(String uid) {
+        return webClient.post()
                 .uri("/database/status/all")
+                .contentType(MediaType.TEXT_PLAIN)
+                .body(Mono.just(uid), String.class)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToFlux(Status.class);
@@ -54,7 +56,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Mono<Boolean> newStatus(Cart cart) {
-        return newStatus(new Status(new HashSet<>(cart.getItems()), Instant.now()));
+        return newStatus(new Status(cart.getUid(), new HashSet<>( cart.getItems()), Instant.now()));
     }
 
 }

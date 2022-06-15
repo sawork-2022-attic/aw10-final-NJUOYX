@@ -8,6 +8,8 @@ import com.pos.database.repository.StatusEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.List;
@@ -43,6 +45,7 @@ public class DatabaseServiceImpl implements DatabaseService{
 
     private StatusEntity fromStatus(Status status){
         return new StatusEntity(
+                status.getUid(),
                 status.getItems().stream()
                         .map(this::fromItem)
                         .collect(Collectors.toSet()),
@@ -52,6 +55,7 @@ public class DatabaseServiceImpl implements DatabaseService{
 
     private StatusEntity fromStatusAndSave(Status status){
         return statusRepository.saveAndFlush(new StatusEntity(
+                status.getUid(),
                 status.getItems().stream()
                         .map(this::fromItemAndSave)
                         .collect(Collectors.toSet()),
@@ -59,15 +63,13 @@ public class DatabaseServiceImpl implements DatabaseService{
         ));
     }
 
-    @Override
-    public List<Product> getAllProduct() {
+    private List<Product> _getAllProduct() {
         return productRepository.findAll().stream()
                 .map(ProductEntity::toProduct)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Product getProduct(String asin) {
+    private Product _getProduct(String asin) {
        ProductEntity entity = productRepository.findOne(Example.of(ProductEntity.fromAsin(asin))).orElse(null);
        if(entity != null){
            return entity.toProduct();
@@ -75,17 +77,35 @@ public class DatabaseServiceImpl implements DatabaseService{
        return null;
     }
 
-    @Override
-    public List<Status> getAllStatus() {
-        return statusRepository.findAll().stream()
+    private List<Status> _getAllStatus(String uid) {
+        return statusRepository.findAll(Example.of(StatusEntity.fromUid(uid))).stream()
                 .map(StatusEntity::toStatus)
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public Boolean addStatus(Status status) {
+    private Boolean _addStatus(Status status) {
         fromStatusAndSave(status);
         return true;
+    }
+
+    @Override
+    public Flux<Product> getAllProduct(){
+        return Flux.fromIterable(_getAllProduct());
+    }
+
+    @Override
+    public Mono<Product> getProduct(String asin){
+        return Mono.fromCallable(()->_getProduct(asin));
+    }
+
+    @Override
+    public Flux<Status> getAllStatus(String uid){
+        return Flux.fromIterable(_getAllStatus(uid));
+    }
+
+    @Override
+    public Mono<Boolean> addStatus(Status status){
+        return Mono.fromCallable(()->_addStatus(status));
     }
 
 }

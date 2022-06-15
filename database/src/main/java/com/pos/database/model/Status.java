@@ -12,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Status {
+    private String uid;
     private Set<Item> items = new LinkedHashSet<>();
     private Instant createdAt;
 }
