@@ -11,3 +11,9 @@ eureka:
 spring:
   application:
     name: cart
+  session:
+    store-type: redis
+  cache:
+    type: redis
+  redis:
+    host: localhost

@@ -17,7 +17,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("product/{asin}")
+    @GetMapping("/product/{asin}")
     public Mono<Product> getProduct(@PathVariable String asin){
         return productService.getProduct(asin);
     }

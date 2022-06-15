@@ -2,6 +2,7 @@ package com.pos.order.service;
 
 import com.pos.cart.model.Cart;
 import com.pos.database.model.Status;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -10,7 +11,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Instant;
 import java.util.HashSet;
-
+import java.util.function.Supplier;
 
 
 @Service
@@ -42,4 +43,5 @@ public class OrderServiceImpl implements OrderService{
     public Mono<Boolean> newStatus(Cart cart) {
         return newStatus(new Status(new HashSet<>(cart.getItems()), Instant.now()));
     }
+
 }

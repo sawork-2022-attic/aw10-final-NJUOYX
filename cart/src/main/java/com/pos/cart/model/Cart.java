@@ -3,16 +3,23 @@ package com.pos.cart.model;
 import com.pos.database.model.Item;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.RedisHash;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
-@Data
+@RedisHash(value = "cart")
 public class Cart implements Serializable {
-    private final List<Item> items = new ArrayList<>();
+    @Id
+    private String uid;
 
+    public Cart(String uid){
+        this.uid = uid;
+    }
+
+    private List<Item> items = new ArrayList<>();
 
     public boolean addItem(Item item) {
         return items.add(item);
@@ -24,5 +31,21 @@ public class Cart implements Serializable {
             total += items.get(i).getQuantity() * items.get(i).getProduct().getPrice();
         }
         return total;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public List<Item> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Item> items){
+        this.items = items;
     }
 }

@@ -3,56 +3,73 @@ package com.pos.cart.service;
 import com.pos.cart.repository.CartRepository;
 import com.pos.cart.model.Cart;
 import com.pos.database.model.Item;
+import org.reactivestreams.Publisher;
+import org.reactivestreams.Subscriber;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
+import java.util.concurrent.Callable;
+
 
 @Service
 public class CartServiceImpl implements CartService{
 
-    private final WebClient webClient = WebClient.builder().baseUrl("http://localhost:8001").build();
-
     @Autowired
     private CartRepository cartRepository;
 
-    @Override
-    public Cart getCart() {
-        return cartRepository.getCart();
+    private Cart _getCart(String uid){
+        return cartRepository.findById(uid).orElse(new Cart(uid));
+    }
+
+    private void _deleteCart(String uid){
+        cartRepository.deleteById(uid);
+    }
+
+    private Callable<Cart> getCartWay(String uid){
+        return () -> _getCart(uid);
+    }
+
+    private Runnable addItemWay(String uid, Item item){
+        return ()->{
+            Cart cart = _getCart(uid);
+            Optional<Item> it = cart.getItems().stream()
+                    .filter(i -> i.equals(item))
+                    .findFirst();
+            if(it.isPresent()){
+                it.get().addQuantity(item.getQuantity());
+            }else{
+                cart.getItems().add(item);
+            }
+            cartRepository.save(cart);
+        };
+    }
+
+    private Runnable checkoutWay(String uid){
+        return () -> {
+            _deleteCart(uid);
+        };
     }
 
     @Override
-    public boolean addItem(Item item) {
-        Cart cart = cartRepository.getCart();
-        Item it = cart.getItems().stream()
-                .filter(i -> i.equals(item))
-                .findFirst().orElse(null);
-        if(it == null){
-            boolean res = cart.addItem(item);
-            cartRepository.setCart(cart);
-            return res;
-        }else{
-            it.addQuantity(1);
-            return true;
-        }
+    public Mono<Cart> getCart(String uid) {
+       return Mono.fromCallable(getCartWay(uid));
     }
 
     @Override
-    public double getTotal() {
-        return cartRepository.getCart().total();
+    public Mono<Boolean> addItem(String uid, Item item) {
+        return Mono.fromRunnable(addItemWay(uid, item));
     }
 
     @Override
-    public Mono<Boolean> checkout() {
-        Mono<Boolean> res = webClient.post()
-                .uri("order/new")
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(cartRepository.getCart()), Cart.class)
-                .accept(MediaType.APPLICATION_JSON)
-                .retrieve()
-                .bodyToMono(Boolean.class);
-        cartRepository.setCart(new Cart());
-        return res;
+    public Mono<Double> getTotal(String uid) {
+        return getCart(uid).flatMap(cart-> Mono.just(cart.total()));
     }
+
+    @Override
+    public Mono<Boolean> checkout(String uid) {
+        return Mono.fromRunnable(checkoutWay(uid));
+    }
+
 }

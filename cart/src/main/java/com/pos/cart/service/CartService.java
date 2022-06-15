@@ -5,11 +5,11 @@ import com.pos.database.model.Item;
 import reactor.core.publisher.Mono;
 
 public interface CartService {
-    Cart getCart();
+    Mono<Cart> getCart(String uid);
 
-    boolean addItem(Item item);
+    Mono<Boolean> addItem(String uid, Item item);
 
-    double getTotal();
+    Mono<Double> getTotal(String uid);
 
-    Mono<Boolean> checkout();
+    Mono<Boolean> checkout(String uid);
 }
