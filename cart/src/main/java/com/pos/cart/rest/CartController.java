@@ -23,7 +23,6 @@ public class CartController {
     public Mono<Boolean> addItem(@RequestBody UserItem useritem){
         return cartService.addItem(useritem.getUid(), useritem.getItem());
     }
-
     @PostMapping("/cart/total")
     public Mono<Double> getTotal(@RequestBody User uid){
         return cartService.getTotal(uid.getUid());
