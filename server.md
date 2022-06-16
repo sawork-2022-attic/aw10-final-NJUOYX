@@ -13,9 +13,9 @@ product:
 cart:
     port = 8003
     api:
-        get:  /cart
+        post:  /cart
         post: /cart/add (requestBody= item)
-        get:  /cart/total
+        post:  /cart/total
         post: /cart/checkout (requestBody=null)
 
 database:
@@ -23,8 +23,8 @@ database:
     api:
         get: /database/product/all
         get: /database/product/{asin}
-        get: /database/status/all
-        get: /database/status/add
+        post: /database/status/all
+        post: /database/status/add
 
 order:
     port = 8004

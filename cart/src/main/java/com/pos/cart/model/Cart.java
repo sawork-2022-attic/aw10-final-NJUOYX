@@ -15,8 +15,17 @@ public class Cart implements Serializable {
     @Id
     private String uid;
 
+    public Cart(){
+
+    }
+
     public Cart(String uid){
         this.uid = uid;
+    }
+
+    public Cart(String uid, List<Item> items){
+        this.uid = uid;
+        this.items = items;
     }
 
     private List<Item> items = new ArrayList<>();
